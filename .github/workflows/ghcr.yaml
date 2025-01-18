@@ -17,8 +17,11 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Lowercase github.repository
+      id: lowercase
+      run: echo "::set-output name=value::$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')"
     - name: Build and Push Container
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: ghcr.io/${{ github.repository }}:latest
+        tags: ghcr.io/${{ steps.lowercase.outputs.value }}:latest
